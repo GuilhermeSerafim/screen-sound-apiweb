@@ -4,16 +4,13 @@ using ScreenSound5.Banco;
 
 try
 {
-    // O using nesse contexto, assim que a conexão for obtida, ele é descartado, para melhor gerenciamento de recursos
-    var connection = new Connection();
-    var listarArtistas = connection.Listar();
-
-    foreach ( var artist in listarArtistas )
+    var artistaDAL = new ArtistaDAL();
+    artistaDAL.Adicionar(new Artista("Foo Fighters", "Foo Fighters é uma banda de rock alternativo americana formada por Dave Grohl em 1995."));
+    var listaArtistas = artistaDAL.Listar();
+    foreach (var artista in listaArtistas)
     {
-        Console.WriteLine(artist);    
+        Console.WriteLine(artista);
     }
- 
-
 }
 catch (Exception ex)
 {
