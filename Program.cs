@@ -4,10 +4,16 @@ using ScreenSound5.Banco;
 
 try
 {
-    // O using nesse contexto, assim que a conexão for obtida ele para de executar, e permite ter um melhor gerenciamento   
-    using var connection = new Connection().ObterConexao();
-    connection.Open();
-    Console.WriteLine(connection.State);
+    // O using nesse contexto, assim que a conexão for obtida, ele é descartado, para melhor gerenciamento de recursos
+    var connection = new Connection();
+    var listarArtistas = connection.Listar();
+
+    foreach ( var artist in listarArtistas )
+    {
+        Console.WriteLine(artist);    
+    }
+ 
+
 }
 catch (Exception ex)
 {
