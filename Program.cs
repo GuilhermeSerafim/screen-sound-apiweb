@@ -6,13 +6,10 @@ try
 {
     ScreenSoundContext context = new();
     ArtistaDAO artistaDAO = new(context);
+    // Atualizar
+    Artista novoArtista = new("Foo Fighters", "KKKKKKK.") { Id = 2, FotoPerfil = "https://s2-g1.glbimg.com/l7fUkvdovxaODjM-7_LKacF-pU4=/0x0:1700x1065/1008x0/smart/filters:strip_icc()/s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/photos/apis/b03aa813eaaa4e059f069c843d77415a/selfie.jpg" };
+    artistaDAO.AtualizarArtista(novoArtista);
 
-    Artista bobMarley = new("Bob Marley", "Its love its Love");
-    artistaDAO.AdicionarArtista(bobMarley);
-    // Procurar por nome
-    var artista = artistaDAO.RecuperarPeloNomeArtista("Djavan");
-    Console.WriteLine(artista);
-    return;
     // Listagem
     var listaDeArtistas = artistaDAO.ListarArtistas();
 

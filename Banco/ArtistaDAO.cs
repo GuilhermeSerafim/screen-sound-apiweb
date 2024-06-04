@@ -23,11 +23,19 @@ internal class ArtistaDAO
     }
 
     // Artista? -> Pode retornar nulo
-    public Artista? RecuperarPeloNomeArtista(string nome)
+    public Artista? RecuperarArtistaPeloNome(string nome)
     {
         var listaArtistas = _context.Artistas.ToList();
-        var artistaRecuperadoPeloNome = listaArtistas.FirstOrDefault(artista => artista.Nome.Equals(nome));
-        return artistaRecuperadoPeloNome;
+        var artistaRecuperadoPeloNome = listaArtistas.Find(artista => artista.Nome.Equals(nome));
+        if (artistaRecuperadoPeloNome == null)
+        {
+            Console.WriteLine("Artista não encontrado");
+            return null;
+        }
+        else
+        {
+            return artistaRecuperadoPeloNome;
+        }
     }
     public void AdicionarArtista(Artista artista)
     {
@@ -35,15 +43,24 @@ internal class ArtistaDAO
         _context.SaveChanges(); // Salva no banco de dados
     }
 
+    // O ID tem que ser correspondente - Demais informações serão atualizadas
     public void AtualizarArtista(Artista artista)
     {
         _context.Artistas.Update(artista);
         _context.SaveChanges();
     }
 
-    public void DeletarArtista(Artista artista)
+    public void DeletarArtista(int id)
     {
-        _context.Artistas.Remove(artista);
+        var listaArtistas = _context.Artistas.ToList();
+        var ArtistaASerDeletadoPorId = listaArtistas.Find(artista => artista.Id == id);
+        if (ArtistaASerDeletadoPorId == null)
+        {
+            Console.WriteLine("Artista não encontrado");
+            return;
+        }
+        Console.WriteLine($"Artista {ArtistaASerDeletadoPorId.Nome} removido");
+        _context.Artistas.Remove(ArtistaASerDeletadoPorId!);
         _context.SaveChanges();
     }
 
