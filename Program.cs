@@ -4,7 +4,9 @@ using ScreenSound5.Banco;
 
 try
 {
-    var listaDeArtistas = ArtistaDAO.ListarArtista();
+    ScreenSoundContext context = new();
+    ArtistaDAO artistaDAO = new(context);
+    var listaDeArtistas = artistaDAO.ListarArtista();
     foreach (var item in listaDeArtistas)
     {
         Console.WriteLine(item);
