@@ -56,10 +56,10 @@ internal class ArtistaDAO
         var ArtistaASerDeletadoPorId = listaArtistas.Find(artista => artista.Id == id);
         if (ArtistaASerDeletadoPorId == null)
         {
-            Console.WriteLine("Artista não encontrado");
+            Console.WriteLine("Artista não encontrado, informe um ID válido");
             return;
         }
-        Console.WriteLine($"Artista {ArtistaASerDeletadoPorId.Nome} removido");
+        Console.WriteLine($"Artista {ArtistaASerDeletadoPorId.Nome} do id {ArtistaASerDeletadoPorId.Id} removido");
         _context.Artistas.Remove(ArtistaASerDeletadoPorId!);
         _context.SaveChanges();
     }

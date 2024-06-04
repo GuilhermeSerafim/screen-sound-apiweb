@@ -2,37 +2,8 @@
 using ScreenSound.Modelos;
 using ScreenSound5.Banco;
 
-try
-{
-    ScreenSoundContext context = new();
-    ArtistaDAO artistaDAO = new(context);
-    // Atualizar
-    Artista novoArtista = new("Foo Fighters", "KKKKKKK.") { Id = 2, FotoPerfil = "https://s2-g1.glbimg.com/l7fUkvdovxaODjM-7_LKacF-pU4=/0x0:1700x1065/1008x0/smart/filters:strip_icc()/s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/photos/apis/b03aa813eaaa4e059f069c843d77415a/selfie.jpg" };
-    artistaDAO.AtualizarArtista(novoArtista);
-
-    // Listagem
-    var listaDeArtistas = artistaDAO.ListarArtistas();
-
-    foreach (var item in listaDeArtistas)
-    {
-        Console.WriteLine(item);
-    }
-}
-catch (Exception ex)
-{
-
-    Console.WriteLine(ex.Message);
-}
-
-// Early return
-return;
-
-Artista ira = new Artista("Ira!", "Banda Ira!");
-Artista beatles = new("The Beatles", "Banda The Beatles");
-
-Dictionary<string, Artista> artistasRegistrados = new();
-artistasRegistrados.Add(ira.Nome, ira);
-artistasRegistrados.Add(beatles.Nome, beatles);
+var context = new ScreenSoundContext();
+var artistaDAO = new ArtistaDAO(context);
 
 Dictionary<int, Menu> opcoes = new();
 opcoes.Add(1, new MenuRegistrarArtista());
@@ -71,7 +42,7 @@ void ExibirOpcoesDoMenu()
     if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
     {
         Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
-        menuASerExibido.Executar(artistasRegistrados);
+        menuASerExibido.Executar(artistaDAO);
         if (opcaoEscolhidaNumerica > 0) ExibirOpcoesDoMenu();
     }
     else
