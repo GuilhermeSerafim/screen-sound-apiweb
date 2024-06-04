@@ -1,13 +1,10 @@
 ﻿namespace ScreenSound5.Banco;
-
 using Microsoft.Data.SqlClient;
 using ScreenSound.Modelos;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Diagnostics;
-using System.Runtime.Intrinsics.X86;
 
-// DAL(Data Access Layer) é uma camada inteira que pode conter múltiplos DAOs,
+// DAL(Data Access Layer) é uma CAMADA INTEIRA que pode conter múltiplos DAOs,
 // serviços e utilitários para acesso aos dados.Foca na abstração do acesso ao banco de dados e pode lidar com múltiplas entidades e tipos de fontes de dados.
+
 // DAO(Data Access Object) é um componente específico dentro da DAL
 // que trata de uma entidade particular.Cada DAO é uma classe dedicada a operações de CRUD(Create, Read, Update, Delete) para uma entidade específica.
 internal class ArtistaDAO
@@ -16,7 +13,7 @@ internal class ArtistaDAO
     public static IEnumerable<Artista> ListarArtista()
     {
         var lista = new List<Artista>();
-        using var conexao = new Conexao().ObterConexao(); // O using faz a conexão, assim que obtida, descartada, para melhor gerenciamento de recursos
+        using var conexao = new ScreenSoundContext().ObterConexao(); // O using faz a conexão, assim que obtida, descartada, para melhor gerenciamento de recursos
         conexao.Open();
 
         SqlCommand command = new("SELECT * FROM ARTISTAS", conexao);  // Representa a instrução SQL que será executada no banco de dados;
@@ -37,7 +34,7 @@ internal class ArtistaDAO
     }
     public static void AdicionarArtista(Artista artista)
     {
-        using var conexao = new Conexao().ObterConexao(); // O using faz a conexão, assim que obtida, descartada, para melhor gerenciamento de recursos
+        using var conexao = new ScreenSoundContext().ObterConexao(); // O using faz a conexão, assim que obtida, descartada, para melhor gerenciamento de recursos
         conexao.Open();
         SqlCommand command = new("INSERT INTO Artistas (Nome, FotoPerfil, Bio) VALUES (@nome, @perfilPadrao, @bio)", conexao);
 
@@ -53,7 +50,7 @@ internal class ArtistaDAO
 
     public static void AtualizarArtista(Artista artista)
     {
-        using var conexao = new Conexao().ObterConexao();
+        using var conexao = new ScreenSoundContext().ObterConexao();
         conexao.Open();
         SqlCommand comando = new($"UPDATE Artistas SET Nome = @nome, Bio = @bio WHERE Id = @id", conexao);
         // Parameters é uma propriedade de SqlCommand que retorna uma coleção de parâmetros 
@@ -69,7 +66,7 @@ internal class ArtistaDAO
 
     public static void DeletarArtista(Artista artista)
     {
-        using var conexao = new Conexao().ObterConexao();
+        using var conexao = new ScreenSoundContext().ObterConexao();
         conexao.Open();
         SqlCommand comando = new($"DELETE FROM Artistas WHERE Id = @id", conexao);
         comando.Parameters.AddWithValue("@id", artista.Id);
