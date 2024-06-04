@@ -5,9 +5,9 @@ namespace ScreenSound.Menus;
 
 internal class MenuMostrarMusicas : Menu
 {
-    public override void Executar(ArtistaDAO artistaDAO)
+    public override void Executar(ArtistaDAO artistaDAO, MusicaDAO musicaDAO)
     {
-        base.Executar(artistaDAO);
+        base.Executar(artistaDAO, musicaDAO);
         ExibirTituloDaOpcao("Exibir detalhes do artista");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
