@@ -6,7 +6,16 @@ try
 {
     ScreenSoundContext context = new();
     ArtistaDAO artistaDAO = new(context);
-    var listaDeArtistas = artistaDAO.ListarArtista();
+
+    Artista bobMarley = new("Bob Marley", "Its love its Love");
+    artistaDAO.AdicionarArtista(bobMarley);
+    // Procurar por nome
+    var artista = artistaDAO.RecuperarPeloNomeArtista("Djavan");
+    Console.WriteLine(artista);
+    return;
+    // Listagem
+    var listaDeArtistas = artistaDAO.ListarArtistas();
+
     foreach (var item in listaDeArtistas)
     {
         Console.WriteLine(item);

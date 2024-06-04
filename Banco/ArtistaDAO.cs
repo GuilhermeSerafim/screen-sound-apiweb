@@ -17,9 +17,17 @@ internal class ArtistaDAO
     }
 
     // IEnumerable - Indica que o método retorna uma coleção de Artista que pode ser iterada.
-    public IEnumerable<Artista> ListarArtista()
+    public IEnumerable<Artista> ListarArtistas()
     {
         return _context.Artistas.ToList();
+    }
+
+    // Artista? -> Pode retornar nulo
+    public Artista? RecuperarPeloNomeArtista(string nome)
+    {
+        var listaArtistas = _context.Artistas.ToList();
+        var artistaRecuperadoPeloNome = listaArtistas.FirstOrDefault(artista => artista.Nome.Equals(nome));
+        return artistaRecuperadoPeloNome;
     }
     public void AdicionarArtista(Artista artista)
     {
