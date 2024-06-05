@@ -40,7 +40,7 @@ void ExibirOpcoesDoMenu()
     string opcaoEscolhida = Console.ReadLine()!;
     int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
 
-    if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
+    if (opcoes.ContainsKey(opcaoEscolhidaNumerica)) 
     {
         Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
         menuASerExibido.Executar(artistaDAL, musicaDAL);

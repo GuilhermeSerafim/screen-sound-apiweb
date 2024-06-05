@@ -1,8 +1,14 @@
-﻿namespace ScreenSound.Modelos; 
+﻿namespace ScreenSound.Modelos;
 
-internal class Artista 
+internal class Artista
 {
-    private List<Musica> musicas = new List<Musica>();
+    // Por que usar ICollection:
+    //    Melhor encapsulamento e abstração.
+    //    Facilita a criação de contratos e testes unitários mais reutilizáveis.
+    //    Maior flexibilidade para alterar a implementação subjacente (Podemos mudar futuramente para HashSet<Musica>, LinkedList<Musica>, etc).
+
+
+    public ICollection<Musica> Musicas { get; set; } = new List<Musica>();
 
     public Artista(string nome, string bio)
     {
@@ -18,13 +24,13 @@ internal class Artista
 
     public void AdicionarMusica(Musica musica)
     {
-        musicas.Add(musica);
+        Musicas.Add(musica);
     }
 
     public void ExibirDiscografia()
     {
         Console.WriteLine($"Discografia do artista {Nome}");
-        foreach (var musica in musicas)
+        foreach (var musica in Musicas)
         {
             Console.WriteLine($"Música: {musica.Nome}");
         }
