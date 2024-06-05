@@ -53,15 +53,17 @@ internal class ArtistaDAO : DAL<Artista>
     public override void Deletar(int id)
     {
         var listaArtistas = _context.Artistas.ToList();
-        var ArtistaASerDeletadoPorId = listaArtistas.Find(artista => artista.Id == id);
-        if (ArtistaASerDeletadoPorId == null)
+        var artistaASerDeletado = listaArtistas.Find(artista => artista.Id == id);
+        if (artistaASerDeletado is not null)
+        {
+            Console.WriteLine($"Artista {artistaASerDeletado.Nome} do id {artistaASerDeletado.Id} removido");
+            _context.Artistas.Remove(artistaASerDeletado!);
+            _context.SaveChanges();
+        }
+        else
         {
             Console.WriteLine("Artista não encontrado, informe um ID válido");
-            return;
         }
-        Console.WriteLine($"Artista {ArtistaASerDeletadoPorId.Nome} do id {ArtistaASerDeletadoPorId.Id} removido");
-        _context.Artistas.Remove(ArtistaASerDeletadoPorId!);
-        _context.SaveChanges();
     }
 
 }
