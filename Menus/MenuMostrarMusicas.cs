@@ -12,7 +12,7 @@ internal class MenuMostrarMusicas : Menu
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
         // O parâmetro artista da expressão lambda, representa cada elemento da coleção que está sendo iterada.
-        var artistaRecuperado = artistaDAL.RecuperarObjPor(artista => artista.Nome.Equals(nomeDoArtista));
+        var artistaRecuperado = artistaDAL.RecuperarObjPor(artista => artista.Nome.Equals(nomeDoArtista)); // A arrow function é a condição - Func<T, bool> condicao
         if (artistaRecuperado is not null)
         {
             Console.WriteLine("\nDiscografia:");
