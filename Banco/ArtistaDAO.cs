@@ -7,7 +7,7 @@ using ScreenSound.Modelos;
 
 // DAO(Data Access Object) é um componente específico dentro da DAL
 // que trata de uma entidade particular.Cada DAO é uma classe dedicada a operações de CRUD(Create, Read, Update, Delete) para uma entidade específica.
-internal class ArtistaDAO
+internal class ArtistaDAO : DAL<Artista>
 {
     private readonly ScreenSoundContext _context;
 
@@ -17,13 +17,13 @@ internal class ArtistaDAO
     }
 
     // IEnumerable - Indica que o método retorna uma coleção de Artista que pode ser iterada.
-    public IEnumerable<Artista> ListarArtistas()
+    public override IEnumerable<Artista> Listar()
     {
         return _context.Artistas.ToList();
     }
 
     // Artista? -> Pode retornar nulo
-    public Artista? RecuperarArtistaPeloNome(string nome)
+    public override Artista? RecuperarObjPeloNome(string nome)
     {
         var listaArtistas = _context.Artistas.ToList();
         var artistaRecuperadoPeloNome = listaArtistas.Find(artista => artista.Nome.Equals(nome));
@@ -37,20 +37,20 @@ internal class ArtistaDAO
             return artistaRecuperadoPeloNome;
         }
     }
-    public void AdicionarArtista(Artista artista)
+    public override void Adicionar(Artista artista)
     {
         _context.Artistas.Add(artista);
         _context.SaveChanges(); // Salva no banco de dados
     }
 
     // O ID tem que ser correspondente - Demais informações serão atualizadas
-    public void AtualizarArtista(Artista artista)
+    public override void Atualizar(Artista artista)
     {
         _context.Artistas.Update(artista);
         _context.SaveChanges();
     }
 
-    public void DeletarArtista(int id)
+    public override void Deletar(int id)
     {
         var listaArtistas = _context.Artistas.ToList();
         var ArtistaASerDeletadoPorId = listaArtistas.Find(artista => artista.Id == id);
