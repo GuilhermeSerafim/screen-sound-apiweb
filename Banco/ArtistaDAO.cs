@@ -9,24 +9,13 @@ using ScreenSound.Modelos;
 // que trata de uma entidade particular.Cada DAO é uma classe dedicada a operações de CRUD(Create, Read, Update, Delete) para uma entidade específica.
 internal class ArtistaDAO : DAL<Artista>
 {
-    private readonly ScreenSoundContext _context;
-
-    public ArtistaDAO(ScreenSoundContext context)
-    {
-        _context = context;
-    }
-
-    // IEnumerable - Indica que o método retorna uma coleção de Artista que pode ser iterada.
-    public override IEnumerable<Artista> Listar()
-    {
-        return _context.Artistas.ToList();
-    }
+    public ArtistaDAO(ScreenSoundContext _context) : base(_context) { }
 
     // Artista? -> Pode retornar nulo
     public override Artista? RecuperarObjPeloNome(string nome)
     {
-        var listaArtistas = _context.Artistas.ToList();
-        var artistaRecuperadoPeloNome = listaArtistas.Find(artista => artista.Nome.Equals(nome));
+        var listaArtistas = Listar();
+        var artistaRecuperadoPeloNome = listaArtistas.ToList().Find(artista => artista.Nome.Equals(nome));
         if (artistaRecuperadoPeloNome == null)
         {
             Console.WriteLine("Artista não encontrado");
@@ -35,34 +24,6 @@ internal class ArtistaDAO : DAL<Artista>
         else
         {
             return artistaRecuperadoPeloNome;
-        }
-    }
-    public override void Adicionar(Artista artista)
-    {
-        _context.Artistas.Add(artista);
-        _context.SaveChanges(); // Salva no banco de dados
-    }
-
-    // O ID tem que ser correspondente - Demais informações serão atualizadas
-    public override void Atualizar(Artista artista)
-    {
-        _context.Artistas.Update(artista);
-        _context.SaveChanges();
-    }
-
-    public override void Deletar(int id)
-    {
-        var listaArtistas = _context.Artistas.ToList();
-        var artistaASerDeletado = listaArtistas.Find(artista => artista.Id == id);
-        if (artistaASerDeletado is not null)
-        {
-            Console.WriteLine($"Artista {artistaASerDeletado.Nome} do id {artistaASerDeletado.Id} removido");
-            _context.Artistas.Remove(artistaASerDeletado!);
-            _context.SaveChanges();
-        }
-        else
-        {
-            Console.WriteLine("Artista não encontrado, informe um ID válido");
         }
     }
 
