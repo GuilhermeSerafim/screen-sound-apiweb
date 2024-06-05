@@ -5,13 +5,14 @@ namespace ScreenSound.Menus;
 
 internal class MenuMostrarMusicas : Menu
 {
-    public override void Executar(ArtistaDAO artistaDAO, MusicaDAO musicaDAO)
+    public override void Executar(GenericDAL<Artista> artistaDAL, GenericDAL<Musica> musicaDAL)
     {
-        base.Executar(artistaDAO, musicaDAO);
+        base.Executar(artistaDAL, musicaDAL);
         ExibirTituloDaOpcao("Exibir detalhes do artista");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
-        var artistaRecuperado = artistaDAO.RecuperarObjPeloNome(nomeDoArtista);
+        // O parâmetro artista da expressão lambda, representa cada elemento da coleção que está sendo iterada.
+        var artistaRecuperado = artistaDAL.RecuperarObjPor(artista => artista.Nome.Equals(nomeDoArtista));
         if (artistaRecuperado is not null)
         {
             Console.WriteLine("\nDiscografia:");

@@ -1,12 +1,10 @@
-﻿using ScreenSound.Modelos;
+﻿namespace ScreenSound5.Banco;
 
-namespace ScreenSound5.Banco;
-
-internal abstract class DAL<T> where T : class // T - Tipo generico, deve ser uma classe
+internal class GenericDAL<T> where T : class // T - Tipo generico, deve ser uma classe
 {
     protected readonly ScreenSoundContext _context;
 
-    protected DAL(ScreenSoundContext context)
+    public GenericDAL(ScreenSoundContext context)
     {
         _context = context;
     }
@@ -34,5 +32,13 @@ internal abstract class DAL<T> where T : class // T - Tipo generico, deve ser um
         _context.Set<T>().Remove(obj);
         _context.SaveChanges();
     }
-    public abstract T? RecuperarObjPeloNome(string nome);
+
+    // Func<in T, out TResult>
+    public T? RecuperarObjPor(Func<T, bool> condicao) // Ex: musicaDao.RecuperarObjPor(m => m.Nome == "Song A") || var musicaPorId = musicaDao.RecuperarObjPor(m => m.Id == 3) ...
+    { 
+        // A execução começa aqui, a condição será executa por último
+        return _context.Set<T>().FirstOrDefault(condicao);
+        // PROCESSO -> FirstOrDefault(condicao) é um método de extensão LINQ que aplica a condição condicao a cada elemento da coleção DbSet<T>.
+        // Ele itera sobre a coleção de entidades Artista.
+    }
 }
