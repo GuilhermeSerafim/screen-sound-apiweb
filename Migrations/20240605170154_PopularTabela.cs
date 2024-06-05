@@ -5,7 +5,7 @@
 namespace ScreenSound5.Migrations;
 
 /// <inheritdoc />
-public partial class PopularTabela : Migration
+public partial class PopularTabelaArtistas : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,7 +28,7 @@ public partial class PopularTabela : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.Sql("DELETE FROM ARTISTAS");
+        migrationBuilder.Sql("DELETE FROM ARTISTAS"); // Para deletar todos os registros de uma tabela
     }
 }
 
