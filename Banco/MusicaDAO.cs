@@ -12,7 +12,17 @@ internal class MusicaDAO : DAL<Musica>
 
     public override Musica? RecuperarObjPeloNome(string nome)
     {
-        return _context.Musicas.FirstOrDefault(a => a.Nome.Equals(nome));
+        var listaMusicas = Listar().ToList();
+        var musicaRecuperadaPeloNome = listaMusicas.Find(musica => musica.Nome == nome);
+        if(musicaRecuperadaPeloNome == null)
+        {
+            Console.WriteLine("Artista não encontrado");
+            return null;
+        }
+        else
+        {
+            return musicaRecuperadaPeloNome;
+        }
 
     }
 }
