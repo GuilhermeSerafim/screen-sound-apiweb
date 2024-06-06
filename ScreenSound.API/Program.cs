@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 using System.Runtime.Intrinsics.X86;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 
 var builder = WebApplication.CreateBuilder(args);
+// Quando uma classe precisa de uma dependência, o contêiner resolve essa dependência e a injeta na classe.
+builder.Services.AddDbContext<ScreenSoundContext>();  // Registra o DbContext no contêiner de DI
+builder.Services.AddTransient<GenericDAL<Artista>>(); // Cria uma nova instância de GenericDAL<Artista> sempre que solicitado.
 //  builder.Services.Configure<TOptions>: Esse método adiciona uma configuração específica para um tipo de opções. No caso, estamos configurando JsonOptions.
 
 //  <Microsoft.AspNetCore.Http.Json.JsonOptions>: Especifica que estamos configurando as opções relacionadas à serialização JSON
@@ -23,16 +27,15 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
 
 var app = builder.Build();
 
-app.MapGet("/Artistas", () => { 
-    var dal = new GenericDAL<Artista>(new ScreenSoundContext());
+app.MapGet("/Artistas", ([FromServices] GenericDAL<Artista> dal) =>
+{
     return Results.Ok(dal.Listar());
 });
 
-app.MapGet("/Artistas/{nome}", (string nome) =>
+app.MapGet("/Artistas/{nome}", ([FromServices] GenericDAL<Artista> dal, string nome) =>
 {
-    var dal = new GenericDAL<Artista>(new ScreenSoundContext());
     var artistaRecuperado = dal.RecuperarObjPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
-    if(artistaRecuperado == null)
+    if (artistaRecuperado == null)
     {
         return Results.NotFound();
     }
@@ -40,9 +43,8 @@ app.MapGet("/Artistas/{nome}", (string nome) =>
 });
 
 // Quando uma solicitação POST é enviada para /Artistas, o código dentro desta lambda será executado.
-app.MapPost("/Artistas", ([FromBody]Artista artista) => // indica que os dados do corpo da solicitação (request body) serão desserializados em uma instância da classe Artista. 
+app.MapPost("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Artista artista) => // indica que os dados do corpo da solicitação (request body) serão desserializados em uma instância da classe Artista. 
 {
-    var dal = new GenericDAL<Artista>(new ScreenSoundContext());
     dal.Adicionar(artista);
     return Results.Ok();
 });
