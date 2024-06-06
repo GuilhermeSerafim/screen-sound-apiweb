@@ -10,7 +10,9 @@ internal class ScreenSoundContext : DbContext
     private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder
+            .UseSqlServer(connectionString)
+            .UseLazyLoadingProxies(); // // Habilita proxies de carregamento lento
     }
 
     // Artistas - Precisa ter o mesmo nome da tabela
