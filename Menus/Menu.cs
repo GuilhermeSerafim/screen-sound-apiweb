@@ -1,5 +1,5 @@
 ﻿using ScreenSound.Modelos;
-using ScreenSound5.Banco;
+using ScreenSound.Banco;
 
 namespace ScreenSound.Menus;
 
