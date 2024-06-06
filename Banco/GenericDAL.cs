@@ -1,4 +1,6 @@
-﻿namespace ScreenSound5.Banco;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ScreenSound5.Banco;
 
 internal class GenericDAL<T> where T : class // T - Tipo generico, deve ser uma classe
 {
@@ -40,5 +42,11 @@ internal class GenericDAL<T> where T : class // T - Tipo generico, deve ser uma 
         return _context.Set<T>().FirstOrDefault(condicao);
         // PROCESSO -> FirstOrDefault(condicao) é um método de extensão LINQ que aplica a condição condicao a cada elemento da coleção DbSet<T>.
         // Ele itera sobre a coleção de entidades Artista.
+    }
+
+    public IEnumerable<T> RecuperarListaDeObjPor(Func<T, bool> condicao)
+    {
+        // Aplica a condição (condicao) a cada elemento da coleção e retorna apenas os elementos que satisfazem a condição.
+        return _context.Set<T>().Where(condicao);
     }
 }

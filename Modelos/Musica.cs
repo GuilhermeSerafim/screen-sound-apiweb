@@ -14,7 +14,7 @@ public class Musica
 
     public void ExibirFichaTecnica()
     {
-        Console.WriteLine($"Nome: {Nome}, Ano de lançamento: {AnoLancamento} do Artista {Artista}");
+        Console.WriteLine($"\n{Nome} - {Artista!.Nome}");
       
     }
 

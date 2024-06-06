@@ -8,7 +8,7 @@ internal class MenuMostrarMusicas : Menu
     public override void Executar(GenericDAL<Artista> artistaDAL, GenericDAL<Musica> musicaDAL)
     {
         base.Executar(artistaDAL, musicaDAL);
-        ExibirTituloDaOpcao("Exibir detalhes do artista");
+        ExibirTituloDaOpcao("Exibir discografia");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
         // O parâmetro artista da expressão lambda, representa cada elemento da coleção que está sendo iterada.

@@ -10,6 +10,7 @@ internal class ScreenSoundContext : DbContext
     private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // O carregamento lento é uma técnica que carrega dados apenas quando eles são necessários, o que é ideal para otimizar o desempenho e o uso de recursos.
         optionsBuilder
             .UseSqlServer(connectionString)
             .UseLazyLoadingProxies(); // // Habilita proxies de carregamento lento
