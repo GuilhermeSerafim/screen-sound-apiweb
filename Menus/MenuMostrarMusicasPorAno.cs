@@ -9,7 +9,7 @@ internal class MenuMostrarMusicasPorAno : Menu
         base.Executar(artistaDAL, musicaDAL);
         ExibirTituloDaOpcao("Exibir musicas por ano de lançamento");
         Console.Write("Digite o ano de lançamento: ");
-        int anoDeLancamentoRequerido = Convert.ToInt32(Console.ReadLine()!);
+        int anoDeLancamentoRequerido = Convert.ToInt32(Console.ReadLine()!);    
         var musicasRecuperadas = musicaDAL.RecuperarListaDeObjPor(musica =>
         musica.AnoLancamento == anoDeLancamentoRequerido)
             .ToList(); // -> A execução da consulta é forçada imediatamente, carregando todos os dados em uma lista.
