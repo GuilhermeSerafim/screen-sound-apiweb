@@ -12,6 +12,8 @@ public class Musica
     public int Id { get; set; }
     public int? AnoLancamento { get; set; }
     public virtual Artista? Artista { get; set; }
+    public int? ArtistaId { get; set; } // FK
+
 
     public void ExibirFichaTecnica()
     {
@@ -24,6 +26,6 @@ public class Musica
         return @$"Id: {Id}
         Ano: {AnoLancamento}
         Nome: {Nome}
-        Artista: {Artista}";
+        Artista: {Artista!.Nome}";
     }
 }

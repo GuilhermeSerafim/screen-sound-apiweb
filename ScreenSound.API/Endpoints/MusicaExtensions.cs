@@ -41,16 +41,28 @@ public static class MusicaExtensions
             return Results.NoContent();
         });
 
-        app.MapPut("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] MusicaRequestEdit musicaRequestEdit) =>
+        app.MapPut("/Musicas", (
+            [FromServices] GenericDAL<Musica> dalMusica, 
+            [FromServices] GenericDAL<Artista> dalArtista, 
+            [FromBody] MusicaRequestEdit musicaRequestEdit) =>
         {
-            var musicaRecuperada = dal.RecuperarObjPor(m => m.Id == musicaRequestEdit.Id);
+            var musicaRecuperada = dalMusica.RecuperarObjPor(m => m.Id == musicaRequestEdit.Id);
             if (musicaRecuperada == null)
             {
                 return Results.NotFound();
             }
+
+            var artistaRecuperado = dalArtista.RecuperarObjPor(a => a.Id == musicaRequestEdit.ArtistaId);
+            if (artistaRecuperado == null)
+            {
+                return Results.NotFound();
+            }
+
             musicaRecuperada.Nome = musicaRequestEdit.nome;
             musicaRecuperada.AnoLancamento = musicaRequestEdit.anoLancamento;
-            dal.Atualizar(musicaRecuperada);
+            musicaRecuperada.Artista = artistaRecuperado;
+
+            dalMusica.Atualizar(musicaRecuperada);
             return Results.Ok();
         });
     }
