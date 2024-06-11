@@ -28,6 +28,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
 
 var app = builder.Build();
 
+// ARTISTAS
 app.MapGet("/Artistas", ([FromServices] GenericDAL<Artista> dal) =>
 {
     return Results.Ok(dal.Listar());
@@ -71,6 +72,7 @@ app.MapPut("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Arti
     return Results.Ok();
 });
 
+// MUSICAS
 app.MapGet("/Musicas", ([FromServices] GenericDAL<Musica> dal) =>
 {
     return Results.Ok(dal.Listar());
@@ -78,7 +80,7 @@ app.MapGet("/Musicas", ([FromServices] GenericDAL<Musica> dal) =>
 
 app.MapGet("/Musicas/{ano}", ([FromServices] GenericDAL<Musica> dal, int ano) =>
 {
-    var musicasRecuperadas = dal.RecuperarListaDeObjPor(a => a.AnoLancamento == ano).ToList();
+    var musicasRecuperadas = dal.RecuperarListaDeObjPor(m => m.AnoLancamento == ano).ToList();
     if(musicasRecuperadas.Count <= 0)
     {
         return Results.NotFound();
@@ -94,7 +96,7 @@ app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] Music
 
 app.MapDelete("/Musicas/{id}", ([FromServices] GenericDAL<Musica> dal, int id) =>
 {
-    var musicaRecuperada = dal.RecuperarObjPor(a => a.Id == id);
+    var musicaRecuperada = dal.RecuperarObjPor(m => m.Id == id);
     if (musicaRecuperada == null)
     {
         return Results.NotFound();
@@ -103,16 +105,16 @@ app.MapDelete("/Musicas/{id}", ([FromServices] GenericDAL<Musica> dal, int id) =
     return Results.NoContent();
 });
 
-app.MapPut("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] Musica artista) =>
+app.MapPut("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] Musica musica) =>
 {
-    var musicaRecuperada = dal.RecuperarObjPor(a => a.Id == artista.Id);
+    var musicaRecuperada = dal.RecuperarObjPor(m => m.Id == m.Id);
     if (musicaRecuperada == null)
     {
         return Results.NotFound();
     }
-    musicaRecuperada.Nome = artista.Nome;
-    musicaRecuperada.Artista = artista.Artista;
-    musicaRecuperada.AnoLancamento = artista.AnoLancamento;
+    musicaRecuperada.Nome = musica.Nome;
+    musicaRecuperada.Artista = musica.Artista;
+    musicaRecuperada.AnoLancamento = musica.AnoLancamento;
     dal.Atualizar(musicaRecuperada);
     return Results.Ok();
 });
