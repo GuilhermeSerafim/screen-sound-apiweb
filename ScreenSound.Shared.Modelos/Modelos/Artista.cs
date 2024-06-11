@@ -2,11 +2,11 @@
 
 public class Artista
 {
-    public Artista(string nome, string bio, string? fotoPerfil = null) // Isso significa que se nenhum valor for fornecido para fotoPerfil ao chamar o construtor, ele será null
+    public Artista(string nome, string bio, string? fotoPerfil)
     {
         Nome = nome;
         Bio = bio;
-        // Se o valor não for fornecido, terá uma foto por padrão
+        // O operador de coalescência nula (??) é usado para fornecer um valor padrão quando uma expressão é null.
         FotoPerfil = fotoPerfil ?? "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
     }
 

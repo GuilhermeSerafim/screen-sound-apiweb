@@ -1,10 +1,6 @@
 using ScreenSound.Modelos;
 using ScreenSound.Banco;
 using System.Text.Json.Serialization;
-using System.Runtime.Intrinsics.X86;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using ScreenSound.API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -25,7 +25,7 @@ public static class ArtistaExtensions
         {
             var artista = new Artista(artistaRequest.nome, artistaRequest.bio, artistaRequest.fotoPerfil);
             dal.Adicionar(artista);
-            return Results.Ok();
+            return Results.Created();
         });
 
         app.MapDelete("/Artistas/{id}", ([FromServices] GenericDAL<Artista> dal, int id) =>

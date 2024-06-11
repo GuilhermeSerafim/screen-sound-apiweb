@@ -2,9 +2,10 @@
 
 public class Musica
 {
-    public Musica(string nome)
+    public Musica(string nome, int? anoLancamento)
     {
         Nome = nome;
+        AnoLancamento = anoLancamento ?? 0;
     }
 
     public string Nome { get; set; }
