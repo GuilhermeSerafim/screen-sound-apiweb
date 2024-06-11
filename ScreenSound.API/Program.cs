@@ -23,6 +23,8 @@ builder.Services.AddTransient<GenericDAL<Musica>>();  // Cria uma nova instância
 //  ReferenceHandler.IgnoreCycles: Define o ReferenceHandler como IgnoreCycles. Isso significa que, durante a serialização, se houver ciclos de referência
 //  (por exemplo, um objeto A referenciando um objeto B, que por sua vez referencia o objeto A), esses ciclos serão ignorados em vez de causar uma exceção.
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
     (options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
