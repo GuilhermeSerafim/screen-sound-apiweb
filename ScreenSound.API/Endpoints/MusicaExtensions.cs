@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScreenSound.API.Request;
+using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -11,17 +12,24 @@ public static class MusicaExtensions
     {
         app.MapGet("/Musicas", ([FromServices] GenericDAL<Musica> dal) =>
         {
-            return Results.Ok(dal.Listar());
+            var listaObjMusicas = dal.Listar();
+            if (listaObjMusicas is null)
+            {
+                return Results.NotFound();
+            }
+            var listaResponseMusicas = EntityListToResponseList(listaObjMusicas);
+            return Results.Ok(listaResponseMusicas);
         });
 
         app.MapGet("/Musicas/{ano}", ([FromServices] GenericDAL<Musica> dal, int ano) =>
         {
-            var musicasRecuperadas = dal.RecuperarListaDeObjPor(m => m.AnoLancamento == ano).ToList();
-            if (musicasRecuperadas.Count <= 0)
+            var listaObjMusicasFiltradoPorAno = dal.RecuperarListaDeObjPor(m => m.AnoLancamento == ano).ToList();
+            if (listaObjMusicasFiltradoPorAno.Count <= 0)
             {
                 return Results.NotFound();
             }
-            return Results.Ok(musicasRecuperadas);
+            var listaResponseMusicas = EntityListToResponseList(listaObjMusicasFiltradoPorAno);
+            return Results.Ok(listaResponseMusicas);
         });
 
         app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => // MusicaRequest - record que recebe os dados
@@ -65,5 +73,19 @@ public static class MusicaExtensions
             dalMusica.Atualizar(musicaRecuperada);
             return Results.Ok();
         });
+    }
+
+    // EntityListToResponseList converte uma lista de entidades Artista em uma lista de ArtistaResponse.
+    private static ICollection<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
+    {
+        // O método Select aplica uma função a cada elemento da coleção de entrada e retorna uma nova coleção contendo os resultados.
+        // Para cada Musica na coleção musicaList, aplica a função EntityToResponse.
+        return musicaList.Select(m => EntityToResponse(m)).ToList();
+    }
+
+    // Converte uma entidade Musica em um objeto MusicaResponse -> Para o cliente visualizar - response
+    private static MusicaResponse EntityToResponse(Musica musica)
+    {
+        return new MusicaResponse(musica.Id, musica.Nome!, musica.Artista!.Id, musica.Artista.Nome, musica.AnoLancamento);
     }
 }

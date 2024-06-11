@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScreenSound.API.Request;
+using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -11,13 +12,23 @@ public static class ArtistaExtensions
     {
         app.MapGet("/Artistas", ([FromServices] GenericDAL<Artista> dal) =>
         {
-            return Results.Ok(dal.Listar());
+            var listaObjArtistas = dal.Listar();
+            if(listaObjArtistas is null)
+            {
+                return Results.NotFound();
+            }
+            return Results.Ok(EntityListToResponseList(listaObjArtistas));
+
         });
 
         app.MapGet("/Artistas/{nome}", ([FromServices] GenericDAL<Artista> dal, string nome) =>
         {
-            var artistasRecuperado = dal.RecuperarListaDeObjPor(a => a.Nome.ToUpper().Equals(nome.ToUpper())); ;
-            return Results.Ok(artistasRecuperado);
+            var artistasRecuperado = dal.RecuperarListaDeObjPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+            if(artistasRecuperado is null)
+            {
+                Results.NotFound();
+            }
+            return Results.Ok(EntityListToResponseList(artistasRecuperado!));
         });
 
         // Quando uma solicitação POST é enviada para /Artistas, o código dentro desta lambda será executado.
@@ -52,5 +63,15 @@ public static class ArtistaExtensions
             dal.Atualizar(artistaRecuperado);   
             return Results.Ok();
         });
+    }
+
+    private static ICollection<ArtistaResponse> EntityListToResponseList(IEnumerable<Artista> entitiesArtistas)
+    {
+        return entitiesArtistas.Select(a => EntityToResponse(a)).ToList();
+    }
+
+    private static ArtistaResponse EntityToResponse(Artista entitieArtista)
+    {
+        return new ArtistaResponse(entitieArtista.Id, entitieArtista.Nome, entitieArtista.Bio, entitieArtista.FotoPerfil);
     }
 }
