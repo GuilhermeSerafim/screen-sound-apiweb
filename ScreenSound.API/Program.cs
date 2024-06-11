@@ -5,6 +5,7 @@ using System.Runtime.Intrinsics.X86;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
+using ScreenSound.API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 // Quando uma classe precisa de uma dependência, o contêiner resolve essa dependência e a injeta na classe.
@@ -25,98 +26,9 @@ builder.Services.AddTransient<GenericDAL<Musica>>();  // Cria uma nova instância
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
     (options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-
 var app = builder.Build();
 
-// ARTISTAS
-app.MapGet("/Artistas", ([FromServices] GenericDAL<Artista> dal) =>
-{
-    return Results.Ok(dal.Listar());
-});
-
-app.MapGet("/Artistas/{nome}", ([FromServices] GenericDAL<Artista> dal, string nome) =>
-{
-    var artistasRecuperado = dal.RecuperarListaDeObjPor(a => a.Nome.ToUpper().Equals(nome.ToUpper())); ;
-    return Results.Ok(  artistasRecuperado);
-});
-
-// Quando uma solicitação POST é enviada para /Artistas, o código dentro desta lambda será executado.
-app.MapPost("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Artista artista) => // indica que os dados do corpo da solicitação (request body) serão desserializados em uma instância da classe Artista. 
-{
-    dal.Adicionar(artista);
-    return Results.Ok();
-});
-
-app.MapDelete("/Artistas/{id}", ([FromServices] GenericDAL<Artista> dal, int id) =>
-{
-    var artistaRecuperado = dal.RecuperarObjPor(a => a.Id == id);
-    if (artistaRecuperado == null)
-    {
-        return Results.NotFound();
-    }
-    dal.Deletar(artistaRecuperado);
-    return Results.NoContent();
-});
-
-app.MapPut("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Artista artista) =>
-{
-    var artistaRecuperado = dal.RecuperarObjPor(a => a.Id == artista.Id);
-    if(artistaRecuperado == null)
-    {
-        return Results.NotFound();
-    }
-    artistaRecuperado.Nome = artista.Nome;
-    artistaRecuperado.Bio = artista.Bio;
-    artistaRecuperado.FotoPerfil = artista.FotoPerfil;
-    dal.Atualizar(artistaRecuperado);
-    return Results.Ok();
-});
-
-// MUSICAS
-app.MapGet("/Musicas", ([FromServices] GenericDAL<Musica> dal) =>
-{
-    return Results.Ok(dal.Listar());
-});
-
-app.MapGet("/Musicas/{ano}", ([FromServices] GenericDAL<Musica> dal, int ano) =>
-{
-    var musicasRecuperadas = dal.RecuperarListaDeObjPor(m => m.AnoLancamento == ano).ToList();
-    if(musicasRecuperadas.Count <= 0)
-    {
-        return Results.NotFound();
-    }
-    return Results.Ok(musicasRecuperadas);
-});
-
-app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] Musica musica) =>
-{
-    dal.Adicionar(musica);
-    return Results.Ok();
-});
-
-app.MapDelete("/Musicas/{id}", ([FromServices] GenericDAL<Musica> dal, int id) =>
-{
-    var musicaRecuperada = dal.RecuperarObjPor(m => m.Id == id);
-    if (musicaRecuperada == null)
-    {
-        return Results.NotFound();
-    }
-    dal.Deletar(musicaRecuperada);
-    return Results.NoContent();
-});
-
-app.MapPut("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] Musica musica) =>
-{
-    var musicaRecuperada = dal.RecuperarObjPor(m => m.Id == m.Id);
-    if (musicaRecuperada == null)
-    {
-        return Results.NotFound();
-    }
-    musicaRecuperada.Nome = musica.Nome;
-    musicaRecuperada.Artista = musica.Artista;
-    musicaRecuperada.AnoLancamento = musica.AnoLancamento;
-    dal.Atualizar(musicaRecuperada);
-    return Results.Ok();
-});
+app.AddEndpointsArtistas();
+app.AddEndpointsMusicas();
 
 app.Run();
