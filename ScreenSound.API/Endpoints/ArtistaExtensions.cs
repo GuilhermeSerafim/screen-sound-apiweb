@@ -39,17 +39,17 @@ public static class ArtistaExtensions
             return Results.NoContent();
         });
 
-        app.MapPut("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Artista artista) =>
+        app.MapPut("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] ArtistaRequestEdit artistaEdit) =>
         {
-            var artistaRecuperado = dal.RecuperarObjPor(a => a.Id == artista.Id);
+            var artistaRecuperado = dal.RecuperarObjPor(a => a.Id == artistaEdit.id);
             if (artistaRecuperado == null)
             {
                 return Results.NotFound();
             }
-            artistaRecuperado.Nome = artista.Nome;
-            artistaRecuperado.Bio = artista.Bio;
-            artistaRecuperado.FotoPerfil = artista.FotoPerfil;
-            dal.Atualizar(artistaRecuperado);
+            artistaRecuperado.Nome = artistaEdit.nome;
+            artistaRecuperado.Bio = artistaEdit.bio;
+            artistaRecuperado.FotoPerfil = artistaEdit.fotoPerfil ?? "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
+            dal.Atualizar(artistaRecuperado);   
             return Results.Ok();
         });
     }
