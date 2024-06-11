@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ScreenSound.API.Request;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -20,8 +21,9 @@ public static class ArtistaExtensions
         });
 
         // Quando uma solicitação POST é enviada para /Artistas, o código dentro desta lambda será executado.
-        app.MapPost("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] Artista artista) => // indica que os dados do corpo da solicitação (request body) serão desserializados em uma instância da classe Artista. 
+        app.MapPost("/Artistas", ([FromServices] GenericDAL<Artista> dal, [FromBody] ArtistaRequest artistaRequest) =>
         {
+            var artista = new Artista(artistaRequest.nome, artistaRequest.bio, artistaRequest.fotoPerfil);
             dal.Adicionar(artista);
             return Results.Ok();
         });

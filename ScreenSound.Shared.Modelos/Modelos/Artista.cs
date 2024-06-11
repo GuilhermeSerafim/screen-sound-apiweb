@@ -1,28 +1,22 @@
-﻿namespace ScreenSound.Modelos;
+﻿using ScreenSound.Modelos;
 
 public class Artista
 {
-    // Por que usar ICollection:
-    //    Melhor encapsulamento e abstração.
-    //    Facilita a criação de contratos e testes unitários mais reutilizáveis.
-    //    Maior flexibilidade para alterar a implementação subjacente (Podemos mudar futuramente para HashSet<Musica>, LinkedList<Musica>, etc).
-
-
-    public Artista(string nome, string bio)
+    public Artista(string nome, string bio, string? fotoPerfil = null) // Isso significa que se nenhum valor for fornecido para fotoPerfil ao chamar o construtor, ele será null
     {
         Nome = nome;
         Bio = bio;
-        FotoPerfil = "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
+        // Se o valor não for fornecido, terá uma foto por padrão
+        FotoPerfil = fotoPerfil ?? "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
     }
 
-    public Artista(){}
+    public Artista() { }
 
     public string Nome { get; set; }
     public string FotoPerfil { get; set; }
     public string Bio { get; set; }
     public int Id { get; set; }
-    // Para usar lazy loading, as propriedades de navegação devem ser marcadas como virtual.
-    public virtual ICollection<Musica> Musicas { get; set; } = new List<Musica>(); // Propriedade de navegação virtual
+    public virtual ICollection<Musica> Musicas { get; set; } = new List<Musica>();
 
     public void AdicionarMusica(Musica musica)
     {
