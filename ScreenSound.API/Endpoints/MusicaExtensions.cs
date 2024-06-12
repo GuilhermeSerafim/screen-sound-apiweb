@@ -76,7 +76,7 @@ public static class MusicaExtensions
     }
 
     // EntityListToResponseList converte uma lista de entidades Artista em uma lista de ArtistaResponse.
-    private static ICollection<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
+    private static List<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
     {
         // O método Select aplica uma função a cada elemento da coleção de entrada e retorna uma nova coleção contendo os resultados.
         // Para cada Musica na coleção musicaList, aplica a função EntityToResponse.
