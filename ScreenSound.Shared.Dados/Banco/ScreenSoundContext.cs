@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.Banco;
 
@@ -20,4 +20,5 @@ public class ScreenSoundContext : DbContext
     // DbSet - Abstração do Entity framework que permite interagir com a tabelade forma concisa
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
+    public DbSet<Genero> Generos { get; set; }
 }

@@ -2,7 +2,7 @@
 
 public class Musica
 {
-    public Musica(string nome, int? anoLancamento)
+    public Musica(string nome, int? anoLancamento = 0)
     {
         Nome = nome;
         AnoLancamento = anoLancamento ?? 0;

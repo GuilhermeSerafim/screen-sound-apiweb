@@ -2,7 +2,7 @@
 
 public class Artista
 {
-    public Artista(string nome, string bio, string? fotoPerfil)
+    public Artista(string nome, string bio, string? fotoPerfil = null)
     {
         Nome = nome;
         Bio = bio;
