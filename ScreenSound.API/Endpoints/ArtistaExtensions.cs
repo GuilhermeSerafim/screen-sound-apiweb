@@ -65,13 +65,7 @@ public static class ArtistaExtensions
         });
     }
 
-    private static ICollection<ArtistaResponse> EntityListToResponseList(IEnumerable<Artista> entitiesArtistas)
-    {
-        return entitiesArtistas.Select(a => EntityToResponse(a)).ToList();
-    }
+    private static List<ArtistaResponse> EntityListToResponseList(IEnumerable<Artista> entitiesArtistas) => entitiesArtistas.Select(a => EntityToResponse(a)).ToList();
 
-    private static ArtistaResponse EntityToResponse(Artista entitieArtista)
-    {
-        return new ArtistaResponse(entitieArtista.Id, entitieArtista.Nome, entitieArtista.Bio, entitieArtista.FotoPerfil);
-    }
+    private static ArtistaResponse EntityToResponse(Artista entitieArtista) => new(entitieArtista.Id, entitieArtista.Nome, entitieArtista.Bio, entitieArtista.FotoPerfil);
 }
