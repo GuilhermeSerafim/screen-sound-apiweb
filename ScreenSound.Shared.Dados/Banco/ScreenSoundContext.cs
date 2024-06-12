@@ -21,4 +21,12 @@ public class ScreenSoundContext : DbContext
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
     public DbSet<Genero> Generos { get; set; }
+
+    // Este método é usado para configurar o modelo de dados e definir como as entidades e suas relações são mapeadas para o banco de dados.
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Musica>()
+            .HasMany(c => c.Generos) // HasMany -> Musica tem muitas instâncias relacionadas Genero.
+            .WithMany(c => c.Musicas); // Configura uma relação muitos-para-muitos entre a entidade Musica e a entidade Genero.
+    }
 }
