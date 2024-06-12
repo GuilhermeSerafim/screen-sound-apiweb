@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.ConstrainedExecution;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScreenSound.API.Request;
 
@@ -12,4 +13,4 @@ namespace ScreenSound.API.Request;
 //  Igualdade de Valor: Records implementam automaticamente a igualdade de valor, o que significa que dois records com os mesmos valores de propriedade são considerados iguais.
 //  Desconstrução: Records suportam desconstrução, permitindo que você divida um record em suas partes constituintes facilmente.
 //  Clonagem com with: Você pode criar cópias de um record com alterações específicas usando a expressão with.
-public record MusicaRequest(string nome, int? anoLancamento);
+public record MusicaRequest([Required] string nome, [Required] int ArtistaId, int anoLancamento, ICollection<GeneroRequest>? Generos = null);

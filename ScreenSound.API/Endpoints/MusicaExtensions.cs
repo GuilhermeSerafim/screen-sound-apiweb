@@ -34,7 +34,13 @@ public static class MusicaExtensions
 
         app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => // MusicaRequest - record que recebe os dados
         {
-            dal.Adicionar(new Musica(musicaRequest.nome, musicaRequest.anoLancamento));
+            // Verifica se o request é nulo ou se os campos obrigatórios estão ausentes
+            if (musicaRequest == null || string.IsNullOrWhiteSpace(musicaRequest.nome) || musicaRequest.ArtistaId == 0)
+            {
+                return Results.BadRequest("Dados inválidos.");
+            }
+
+            dal.Adicionar(new Musica(musicaRequest.nome, musicaRequest.anoLancamento, musicaRequest.ArtistaId));
             return Results.Created();
         });
 
@@ -50,8 +56,8 @@ public static class MusicaExtensions
         });
 
         app.MapPut("/Musicas", (
-            [FromServices] GenericDAL<Musica> dalMusica, 
-            [FromServices] GenericDAL<Artista> dalArtista, 
+            [FromServices] GenericDAL<Musica> dalMusica,
+            [FromServices] GenericDAL<Artista> dalArtista,
             [FromBody] MusicaRequestEdit musicaRequestEdit) =>
         {
             var musicaRecuperada = dalMusica.RecuperarObjPor(m => m.Id == musicaRequestEdit.Id);
