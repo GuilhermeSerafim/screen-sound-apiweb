@@ -30,7 +30,28 @@ public static class GeneroExtensions
             return Results.Ok(EntityListToResponseList(listaEntityGeneros));
         });
 
+        app.MapPost("/Generos", ([FromServices] GenericDAL<Genero> dal, [FromBody] GeneroRequest generoReq) =>
+        {
+            dal.Adicionar(RequestToEntity(generoReq));
+            return Results.Created();
+        });
+
+
+        app.MapDelete("/Generos/{id}", ([FromServices] GenericDAL<Genero> dalGenero, int id) =>
+        {
+            var generoRecuperado = dalGenero.RecuperarObjPor(g => g.Id == id);
+            if (generoRecuperado == null)
+            {
+                return Results.NotFound();
+            }
+            dalGenero.Deletar(generoRecuperado);
+            return Results.NoContent();
+        });
     }
     private static List<GeneroResponse> EntityListToResponseList(IEnumerable<Genero> entitiesGeneros) => entitiesGeneros.Select(a => EntityToResponse(a)).ToList();
     private static GeneroResponse EntityToResponse(Genero entitieGeneros) => new(entitieGeneros.Id, entitieGeneros.Nome, entitieGeneros.Descricao);
+    private static Genero RequestToEntity(GeneroRequest generoRequest)
+    {
+        return new Genero(generoRequest.Nome) { Descricao = generoRequest.Descricao };
+    }
 }

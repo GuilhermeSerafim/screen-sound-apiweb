@@ -42,7 +42,7 @@ public static class MusicaExtensions
                 AnoLancamento = musicaRequest.anoLancamento,
                 Generos = musicaRequest.Generos is not null ?
                 // Adiciona dinamicamente a tabela de generos
-                GeneroRequestValidate(musicaRequest.Generos, dalGenero) : new List<Genero>()
+                GeneroRequestValidateExist(musicaRequest.Generos, dalGenero) : new List<Genero>()
             };
             dalMusica.Adicionar(musicaObj);
             return Results.Created();
@@ -86,7 +86,7 @@ public static class MusicaExtensions
     }
 
     // Objetivo: Evitar duplicidade de generos com o mesmo nome
-    private static ICollection<Genero> GeneroRequestValidate(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
+    private static ICollection<Genero> GeneroRequestValidateExist(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
     {
         var listaDeGeneros = new List<Genero>(); // Inicializa uma lista vazia para armazenar os gêneros convertidos.
 
