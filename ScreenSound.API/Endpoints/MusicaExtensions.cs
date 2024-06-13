@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 using ScreenSound.API.Request;
 using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
+using System;
 
 namespace ScreenSound.API.Endpoints;
 
@@ -40,7 +43,7 @@ public static class MusicaExtensions
             {
                 ArtistaId = musicaRequest.ArtistaId,
                 AnoLancamento = musicaRequest.anoLancamento,
-                Generos = musicaRequest.Generos is not null ?
+                Generos = musicaRequest.Generos is not null ? // Caso precise atualizar, o entity atualiza?
                 // Adiciona dinamicamente a tabela de generos
                 GeneroRequestValidateExist(musicaRequest.Generos, dalGenero) : new List<Genero>()
             };
@@ -84,7 +87,6 @@ public static class MusicaExtensions
             return Results.Ok();
         });
     }
-
     // Objetivo: Evitar duplicidade de generos com o mesmo nome
     private static ICollection<Genero> GeneroRequestValidateExist(ICollection<GeneroRequest> generosRequest, GenericDAL<Genero> dalGenero)
     {
@@ -100,6 +102,8 @@ public static class MusicaExtensions
             if (generoRecuperado is not null) // Se o gênero já existe no banco de dados...
             {
                 listaDeGenerosUnicos.Add(generoRecuperado); // Adiciona o gênero recuperado à lista.
+                                                            // Se um gênero já existe, ele é recuperado e adicionado à lista de gêneros da música.
+                                                            // EF Core irá detectar que não houve mudanças nesses objetos e não tentará adicioná-los novamente.
             }
             else // Se o gênero não existe no banco de dados...
             {

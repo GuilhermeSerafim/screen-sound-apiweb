@@ -2,7 +2,9 @@
 using System.Linq.Expressions;
 
 namespace ScreenSound.Banco;
-
+// EF Core e Rastreamento de Mudanças:
+// EF Core rastreia automaticamente as entidades que foram recuperadas do banco de dados e quaisquer alterações feitas nelas enquanto elas estão sendo rastreadas pelo contexto.
+// Quando você chama SaveChanges, EF Core persiste todas as alterações rastreadas no banco de dados.
 public class GenericDAL<T> where T : class // T - Tipo generico, deve ser uma classe
 {
     protected readonly ScreenSoundContext _context;
