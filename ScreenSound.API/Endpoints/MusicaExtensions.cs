@@ -33,7 +33,9 @@ public static class MusicaExtensions
             return Results.Ok(listaResponseMusicas);
         });
 
-        app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => // MusicaRequest - record que recebe os dados
+        app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dalMusica,
+            [FromServices] GenericDAL<Genero> dalGenero,
+            [FromBody] MusicaRequest musicaRequest) => // MusicaRequest - record que recebe os dados
         {
             var musicaObj = new Musica(musicaRequest.nome)
             {
@@ -41,9 +43,9 @@ public static class MusicaExtensions
                 AnoLancamento = musicaRequest.anoLancamento,
                 Generos = musicaRequest.Generos is not null ?
                 // Adiciona dinamicamente a tabela de generos
-                GeneroRequestConverter(musicaRequest.Generos) : new List<Genero>() 
+                GeneroRequestConverter(musicaRequest.Generos, dalGenero) : new List<Genero>()
             };
-            dal.Adicionar(musicaObj);
+            dalMusica.Adicionar(musicaObj);
             return Results.Created();
         });
 
@@ -84,15 +86,34 @@ public static class MusicaExtensions
         });
     }
 
-    private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos)
+    private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
     {
-        return generos.Select(a => GeneroRequestToEntity(a)).ToList();
-    }
-    private static Genero GeneroRequestToEntity(GeneroRequest genero)
-    {
-        return new Genero() { Nome = genero.Nome, Descricao = genero.Descricao };
+        var listaDeGeneros = new List<Genero>(); // Inicializa uma lista vazia para armazenar os gêneros convertidos.
+
+        foreach (var item in generos) // Itera sobre cada item da coleção de GeneroRequest.
+        {
+            var entity = GeneroRequestToEntity(item); // Converte GeneroRequest para a entidade Genero.
+
+            // Verifica se já existe um gênero no banco de dados com o mesmo nome (ignorando diferenças de maiúsculas/minúsculas).
+            var generoRecuperado = dalGenero.RecuperarObjPor(g => g.Nome.ToUpper().Equals(item.Nome.ToUpper()));
+
+            if (generoRecuperado is not null) // Se o gênero já existe no banco de dados...
+            {
+                listaDeGeneros.Add(generoRecuperado); // Adiciona o gênero recuperado à lista.
+            }
+            else // Se o gênero não existe no banco de dados...
+            {
+                listaDeGeneros.Add(entity); // Adiciona a nova entidade Genero à lista.
+            }
+        }
+
+        return listaDeGeneros; // Retorna a lista de gêneros convertidos.
     }
 
+    private static Genero GeneroRequestToEntity(GeneroRequest generoRequest)
+    {
+        return new Genero() { Nome = generoRequest.Nome, Descricao = generoRequest.Descricao };
+    }
 
     // EntityListToResponseList converte uma lista de entidades Artista em uma lista de ArtistaResponse.
     private static List<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
