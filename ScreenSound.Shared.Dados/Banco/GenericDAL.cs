@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ScreenSound.Banco;
 
@@ -44,7 +45,7 @@ public class GenericDAL<T> where T : class // T - Tipo generico, deve ser uma cl
         // Ele itera sobre a coleção de entidades Artista.
     }
 
-    public IEnumerable<T> RecuperarListaDeObjPor(Func<T, bool> condicao)
+    public IEnumerable<T> RecuperarListaDeObjPor(Expression<Func<T, bool>> condicao)
     {
         // Aplica a condição (condicao) a cada elemento da coleção e retorna apenas os elementos que satisfazem a condição.
         return _context.Set<T>().Where(condicao);

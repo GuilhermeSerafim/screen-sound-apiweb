@@ -6,8 +6,9 @@ using ScreenSound.API.Endpoints;
 var builder = WebApplication.CreateBuilder(args);
 // Quando uma classe precisa de uma dependência, o contêiner resolve essa dependência e a injeta na classe.
 builder.Services.AddDbContext<ScreenSoundContext>();  // Registra o DbContext no contêiner de DI
-builder.Services.AddTransient<GenericDAL<Artista>>(); // Cria uma nova instância de GenericDAL<Artista> sempre que solicitado.
+builder.Services.AddTransient<GenericDAL<Artista>>(); // Cria uma nova instância de GenericDAL<Artista> sempre que solicitado (CONTAINER DI).
 builder.Services.AddTransient<GenericDAL<Musica>>();  // Cria uma nova instância de GenericDAL<Musica> sempre que solicitado.
+builder.Services.AddTransient<GenericDAL<Genero>>();  // Cria uma nova instância de GenericDAL<Musica> sempre que solicitado.
 //  builder.Services.Configure<TOptions>: Esse método adiciona uma configuração específica para um tipo de opções. No caso, estamos configurando JsonOptions.
 
 //  <Microsoft.AspNetCore.Http.Json.JsonOptions>: Especifica que estamos configurando as opções relacionadas à serialização JSON
@@ -33,6 +34,7 @@ var app = builder.Build();
 
 app.AddEndpointsArtistas();
 app.AddEndpointsMusicas();
+app.AddEndpointsGeneros();
 
 app.UseSwagger(); // Configura o middleware para gerar e servir a especificação OpenAPI da API como um endpoint JSON.
 app.UseSwaggerUI();  // Configura o middleware para servir a interface de usuário do Swagger, permitindo a exploração e teste interativos da API no navegador.

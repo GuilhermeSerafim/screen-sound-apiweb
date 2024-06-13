@@ -3,7 +3,6 @@ using ScreenSound.API.Request;
 using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
-using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.API.Endpoints;
 
@@ -43,7 +42,7 @@ public static class MusicaExtensions
                 AnoLancamento = musicaRequest.anoLancamento,
                 Generos = musicaRequest.Generos is not null ?
                 // Adiciona dinamicamente a tabela de generos
-                GeneroRequestConverter(musicaRequest.Generos, dalGenero) : new List<Genero>()
+                GeneroRequestValidate(musicaRequest.Generos, dalGenero) : new List<Genero>()
             };
             dalMusica.Adicionar(musicaObj);
             return Results.Created();
@@ -86,7 +85,8 @@ public static class MusicaExtensions
         });
     }
 
-    private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
+    // Objetivo: Evitar duplicidade de generos com o mesmo nome
+    private static ICollection<Genero> GeneroRequestValidate(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
     {
         var listaDeGeneros = new List<Genero>(); // Inicializa uma lista vazia para armazenar os gêneros convertidos.
 
