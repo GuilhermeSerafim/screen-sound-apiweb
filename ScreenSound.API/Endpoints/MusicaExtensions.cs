@@ -86,33 +86,33 @@ public static class MusicaExtensions
     }
 
     // Objetivo: Evitar duplicidade de generos com o mesmo nome
-    private static ICollection<Genero> GeneroRequestValidateExist(ICollection<GeneroRequest> generos, GenericDAL<Genero> dalGenero)
+    private static ICollection<Genero> GeneroRequestValidateExist(ICollection<GeneroRequest> generosRequest, GenericDAL<Genero> dalGenero)
     {
-        var listaDeGeneros = new List<Genero>(); // Inicializa uma lista vazia para armazenar os gêneros convertidos.
+        var listaDeGenerosUnicos = new List<Genero>(); // Inicializa uma lista vazia para armazenar os gêneros convertidos.
 
-        foreach (var item in generos) // Itera sobre cada item da coleção de GeneroRequest.
+        foreach (var generoRequest in generosRequest) // Itera sobre cada item da coleção de GeneroRequest.
         {
-            var entity = GeneroRequestToEntity(item); // Converte GeneroRequest para a entidade Genero.
+            var entity = GeneroRequestToEntity(generoRequest); // Converte GeneroRequest para a entidade Genero.
 
             // Verifica se já existe um gênero no banco de dados com o mesmo nome (ignorando diferenças de maiúsculas/minúsculas).
-            var generoRecuperado = dalGenero.RecuperarObjPor(g => g.Nome.ToUpper().Equals(item.Nome.ToUpper()));
+            var generoRecuperado = dalGenero.RecuperarObjPor(generoEntity => generoEntity.Nome.ToUpper().Equals(generoRequest.Nome.ToUpper()));
 
             if (generoRecuperado is not null) // Se o gênero já existe no banco de dados...
             {
-                listaDeGeneros.Add(generoRecuperado); // Adiciona o gênero recuperado à lista.
+                listaDeGenerosUnicos.Add(generoRecuperado); // Adiciona o gênero recuperado à lista.
             }
             else // Se o gênero não existe no banco de dados...
             {
-                listaDeGeneros.Add(entity); // Adiciona a nova entidade Genero à lista.
+                listaDeGenerosUnicos.Add(entity); // Adiciona a nova entidade Genero à lista.
             }
         }
 
-        return listaDeGeneros; // Retorna a lista de gêneros convertidos.
+        return listaDeGenerosUnicos; // Retorna a lista de gêneros convertidos.
     }
 
     private static Genero GeneroRequestToEntity(GeneroRequest generoRequest)
     {
-        return new Genero() { Nome = generoRequest.Nome, Descricao = generoRequest.Descricao };
+        return new Genero(generoRequest.Nome) { Descricao = generoRequest.Descricao };
     }
 
     // EntityListToResponseList converte uma lista de entidades Artista em uma lista de ArtistaResponse.
