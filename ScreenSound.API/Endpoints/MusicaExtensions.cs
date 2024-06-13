@@ -3,6 +3,7 @@ using ScreenSound.API.Request;
 using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.API.Endpoints;
 
@@ -34,13 +35,15 @@ public static class MusicaExtensions
 
         app.MapPost("/Musicas", ([FromServices] GenericDAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => // MusicaRequest - record que recebe os dados
         {
-            // Verifica se o request é nulo ou se os campos obrigatórios estão ausentes
-            if (musicaRequest == null || string.IsNullOrWhiteSpace(musicaRequest.nome) || musicaRequest.ArtistaId == 0)
+            var musicaObj = new Musica(musicaRequest.nome)
             {
-                return Results.BadRequest("Dados inválidos.");
-            }
-
-            dal.Adicionar(new Musica(musicaRequest.nome, musicaRequest.anoLancamento, musicaRequest.ArtistaId));
+                ArtistaId = musicaRequest.ArtistaId,
+                AnoLancamento = musicaRequest.anoLancamento,
+                Generos = musicaRequest.Generos is not null ?
+                // Adiciona dinamicamente a tabela de generos
+                GeneroRequestConverter(musicaRequest.Generos) : new List<Genero>() 
+            };
+            dal.Adicionar(musicaObj);
             return Results.Created();
         });
 
@@ -80,6 +83,16 @@ public static class MusicaExtensions
             return Results.Ok();
         });
     }
+
+    private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos)
+    {
+        return generos.Select(a => GeneroRequestToEntity(a)).ToList();
+    }
+    private static Genero GeneroRequestToEntity(GeneroRequest genero)
+    {
+        return new Genero() { Nome = genero.Nome, Descricao = genero.Descricao };
+    }
+
 
     // EntityListToResponseList converte uma lista de entidades Artista em uma lista de ArtistaResponse.
     private static List<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)

@@ -4,12 +4,8 @@ namespace ScreenSound.Modelos;
 
 public class Musica
 {
-    public Musica(string nome, int artistaId, int? anoLancamento = 0)
-    {
-        Nome = nome;
-        AnoLancamento = anoLancamento ?? 0;
-        ArtistaId = artistaId;
-    }
+    public Musica(string nome) => Nome = nome;
+    public Musica() { } // Construtor padrão
 
     public string Nome { get; set; }
     public int Id { get; set; }
