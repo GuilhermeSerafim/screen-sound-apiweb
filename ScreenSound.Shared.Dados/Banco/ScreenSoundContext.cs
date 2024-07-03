@@ -5,11 +5,23 @@ namespace ScreenSound.Banco;
 
 public class ScreenSoundContext : DbContext
 {
-    // protected: Acessível dentro da própria classe e por subclasses. 
-    //private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-    private string connectionString = "Server=tcp:screensoundserver3.database.windows.net,1433;Initial Catalog=ScreenSoundV3;Persist Security Info=False;User ID=guilherme;Password=Cachorro!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+    // Ambiente local - dev
+    // no futuro vamos precisar executar as migrations para criar essa no banco local, em outro ambiente de desenvolvimento.
+    private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+
+    public ScreenSoundContext(DbContextOptions options) : base(options)
+    {
+
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // Essa checagem garante que o DbContext não será configurado novamente se já tiver sido configurado em outro lugar. 
+        if (optionsBuilder.IsConfigured)
+        {
+            // Early return para não configuração
+            return;
+        }
         // O carregamento lento é uma técnica que carrega dados apenas quando eles são necessários, o que é ideal para otimizar o desempenho e o uso de recursos.
         optionsBuilder
             .UseSqlServer(connectionString)

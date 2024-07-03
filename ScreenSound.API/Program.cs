@@ -2,10 +2,17 @@ using ScreenSound.Modelos;
 using ScreenSound.Banco;
 using System.Text.Json.Serialization;
 using ScreenSound.API.Endpoints;
+using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 // Quando uma classe precisa de uma dependência, o contêiner resolve essa dependência e a injeta na classe.
-builder.Services.AddDbContext<ScreenSoundContext>();  // Registra o DbContext no contêiner de DI
+builder.Services.AddDbContext<ScreenSoundContext>((options) =>
+{
+    options
+            .UseSqlServer(builder.Configuration["ConnectionStrings:ScreenSoundDB"])
+            .UseLazyLoadingProxies(); // // Habilita proxies de carregamento lento
+});  // Registra o DbContext no contêiner de DI
 builder.Services.AddTransient<GenericDAL<Artista>>(); // Cria uma nova instância de GenericDAL<Artista> sempre que solicitado (CONTAINER DI).
 builder.Services.AddTransient<GenericDAL<Musica>>();  // Cria uma nova instância de GenericDAL<Musica> sempre que solicitado.
 builder.Services.AddTransient<GenericDAL<Genero>>();  // Cria uma nova instância de GenericDAL<Musica> sempre que solicitado.
