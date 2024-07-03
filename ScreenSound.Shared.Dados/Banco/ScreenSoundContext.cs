@@ -6,7 +6,8 @@ namespace ScreenSound.Banco;
 public class ScreenSoundContext : DbContext
 {
     // protected: Acessível dentro da própria classe e por subclasses. 
-    private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+    //private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound5V0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+    private string connectionString = "Server=tcp:screensoundserver3.database.windows.net,1433;Initial Catalog=ScreenSoundV3;Persist Security Info=False;User ID=guilherme;Password=Cachorro!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // O carregamento lento é uma técnica que carrega dados apenas quando eles são necessários, o que é ideal para otimizar o desempenho e o uso de recursos.
@@ -19,7 +20,7 @@ public class ScreenSoundContext : DbContext
     // DbSet - Abstração do Entity framework que permite interagir com a tabelade forma concisa
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
-    public DbSet<Genero> Generos { get; set; }
+    public DbSet<Genero> Generos { get; set; }  
 
     // Este método é usado para configurar o modelo de dados e definir como as entidades e suas relações são mapeadas para o banco de dados.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
